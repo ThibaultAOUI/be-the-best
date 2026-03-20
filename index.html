@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be the Best — AOUI Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --pink:       #EF4462;
+  --pink-dark:  #D32449;
+  --cyan:       #52D6FF;
+  --purple:     #A855F7;
+  --lime:       #84CC16;
+  --orange:     #F97316;
+  --blue:       #3B82F6;
+  --magenta:    #EC4899;
+  --green:      #22C55E;
+  --bg:         #FFFFFF;
+  --fg:         #171717;
+  --muted-bg:   #F4F5F6;
+  --muted-fg:   #737373;
+  --border:     #DFE2E6;
+  --shadow-sm:  0 1px 3px -1px rgba(0,0,0,.10);
+  --shadow-md:  0 4px 12px -2px rgba(0,0,0,.12);
+  --shadow-lg:  0 12px 32px -8px rgba(0,0,0,.15);
+  --r-sm: .375rem; --r-md: .5rem; --r-lg: .75rem; --r-xl: 1rem; --r-full: 9999px;
+  --xs:.25rem; --sm:.5rem; --md:1rem; --lg:1.5rem; --xl:2rem; --2xl:3rem; --3xl:4rem;
+}
+
+body { background:var(--muted-bg); color:var(--fg); font-family:'Inter',system-ui,sans-serif; font-size:1rem; line-height:1.6; letter-spacing:-.01em; -webkit-font-smoothing:antialiased; min-height:100vh; }
+.wrapper { max-width:860px; margin:0 auto; padding:var(--3xl) var(--lg) var(--3xl); }
+
+/* HEADER */
+header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:var(--2xl); padding-bottom:var(--xl); border-bottom:1px solid var(--border); }
+.hl .eyebrow { font-size:.75rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted-fg); margin-bottom:var(--sm); }
+.hl h1 { font-family:'Inter',system-ui,sans-serif; font-size:3rem; font-weight:700; line-height:1.05; letter-spacing:-.025em; }
+.hl h1 em { font-style:normal; color:var(--pink); }
+.hr { text-align:right; padding-top:6px; }
+#current-date { font-size:.75rem; color:var(--muted-fg); margin-bottom:var(--sm); }
+.badge { display:inline-flex; align-items:center; gap:var(--sm); font-size:.75rem; font-weight:600; color:var(--fg); background:var(--bg); border:1px solid var(--border); border-radius:var(--r-full); padding:6px var(--md); box-shadow:var(--shadow-sm); }
+.badge-dot { width:6px; height:6px; border-radius:50%; background:var(--pink); animation:breathe 2s ease-in-out infinite; }
+@keyframes breathe { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+
+/* STATS BAR */
+.stats-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--xl); flex-wrap:wrap; gap:var(--sm); }
+.stat-chip { display:inline-flex; align-items:center; gap:var(--sm); background:var(--bg); border:1px solid var(--border); border-radius:var(--r-full); padding:7px var(--lg); box-shadow:var(--shadow-sm); font-size:.875rem; font-weight:500; color:var(--muted-fg); }
+.stat-chip strong { color:var(--fg); font-weight:700; }
+.stat-chip.pink strong { color:var(--pink); }
+.stat-chip.green strong { color:var(--green); }
+
+/* NETLIFY BANNER */
+.netlify-banner {
+  background:var(--bg); border:1px solid var(--border); border-radius:var(--r-xl);
+  padding:var(--lg) var(--xl); margin-bottom:var(--xl); box-shadow:var(--shadow-sm);
+  display:none;
+}
+.netlify-banner.open { display:block; }
+.netlify-banner-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--md); cursor:pointer; }
+.netlify-banner-title { font-size:.875rem; font-weight:700; color:var(--fg); display:flex; align-items:center; gap:var(--sm); }
+.netlify-banner-title .icon { font-size:1rem; }
+.netlify-close { font-size:.75rem; color:var(--muted-fg); cursor:pointer; background:none; border:none; font-family:inherit; padding:0; }
+.netlify-close:hover { color:var(--pink); }
+.netlify-steps { display:flex; flex-direction:column; gap:var(--md); }
+.netlify-step { display:flex; gap:var(--md); align-items:flex-start; }
+.step-num { width:24px; height:24px; border-radius:50%; background:var(--pink); color:#fff; font-size:.75rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+.step-text { font-size:.875rem; color:var(--muted-fg); line-height:1.5; }
+.step-text strong { color:var(--fg); }
+.step-text a { color:var(--pink); text-decoration:none; font-weight:600; }
+.step-text a:hover { text-decoration:underline; }
+.step-text code { background:var(--muted-bg); border:1px solid var(--border); border-radius:var(--r-sm); padding:1px 6px; font-size:.8rem; color:var(--fg); font-family:monospace; }
+
+/* DEPLOY BTN */
+.btn-deploy { display:inline-flex; align-items:center; gap:var(--sm); font-family:'Inter',sans-serif; font-size:.875rem; font-weight:600; color:var(--muted-fg); background:var(--bg); border:1px solid var(--border); border-radius:var(--r-lg); padding:8px var(--md); cursor:pointer; box-shadow:var(--shadow-sm); transition:all .2s ease; }
+.btn-deploy:hover { border-color:var(--pink); color:var(--pink); box-shadow:0 4px 14px rgba(239,68,98,.15); }
+
+/* SUGGESTIONS */
+.section-label { font-size:.75rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--muted-fg); margin-bottom:var(--md); }
+.suggestions-wrap { margin-bottom:var(--lg); }
+.suggestions { display:flex; flex-wrap:wrap; gap:var(--sm); }
+.sug-pill { font-family:'Inter',sans-serif; font-size:.875rem; font-weight:500; color:var(--muted-fg); background:var(--bg); border:1px solid var(--border); border-radius:var(--r-full); padding:6px var(--md); cursor:pointer; transition:all .2s ease; box-shadow:var(--shadow-sm); }
+.sug-pill:hover { background:var(--pink); color:#fff; border-color:var(--pink); box-shadow:0 4px 16px rgba(239,68,98,.3); transform:scale(1.02); }
+.sug-pill.ia.active     { background:rgba(82,214,255,.12); color:#0a7fa8; border-color:rgba(82,214,255,.5); }
+.sug-pill.strat.active  { background:rgba(249,115,22,.10); color:#b04a00; border-color:rgba(249,115,22,.4); }
+.sug-pill.mkt.active    { background:rgba(239,68,98,.10); color:var(--pink-dark); border-color:rgba(239,68,98,.35); }
+
+/* INPUT */
+.input-wrap { margin-bottom:var(--xl); }
+.input-group { display:flex; gap:var(--sm); align-items:center; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--r-xl); padding:var(--sm) var(--sm) var(--sm) var(--lg); box-shadow:var(--shadow-md); transition:border-color .2s, box-shadow .2s; }
+.input-group:focus-within { border-color:var(--pink); box-shadow:0 0 0 4px rgba(239,68,98,.10),var(--shadow-md); }
+.input-group input { flex:1; border:none; outline:none; background:transparent; font-family:'Inter',sans-serif; font-size:.9375rem; color:var(--fg); min-width:0; letter-spacing:-.01em; }
+.input-group input::placeholder { color:var(--muted-fg); }
+.btn-gen { background:var(--pink); color:#fff; border:none; font-family:'Inter',sans-serif; font-size:.875rem; font-weight:600; padding:.75rem 1.5rem; border-radius:var(--r-lg); cursor:pointer; transition:all .2s ease; white-space:nowrap; box-shadow:0 4px 14px rgba(239,68,98,.35); letter-spacing:-.01em; }
+.btn-gen:hover { background:var(--pink-dark); box-shadow:0 6px 20px rgba(239,68,98,.45); transform:scale(1.02); }
+.btn-gen:active { transform:scale(.99); }
+.btn-gen:disabled { background:var(--border); color:var(--muted-fg); box-shadow:none; cursor:not-allowed; transform:none; }
+
+/* PROGRESS */
+.progress-bar { height:3px; background:var(--border); border-radius:var(--r-full); margin-bottom:var(--lg); overflow:hidden; display:none; }
+.progress-fill { height:100%; width:0; background:linear-gradient(90deg,var(--pink),var(--cyan)); border-radius:var(--r-full); transition:width .5s ease; }
+
+/* STATUS */
+.status { font-size:.875rem; color:var(--muted-fg); margin-bottom:var(--lg); min-height:20px; display:flex; align-items:center; gap:var(--sm); }
+.spinner { width:14px; height:14px; border-radius:50%; border:2px solid rgba(239,68,98,.2); border-top-color:var(--pink); animation:spin .7s linear infinite; flex-shrink:0; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ERROR */
+.error-box { background:rgba(239,68,98,.06); border:1px solid rgba(239,68,98,.25); color:var(--pink-dark); font-size:.875rem; padding:var(--md) var(--lg); border-radius:var(--r-lg); margin-bottom:var(--lg); line-height:1.6; }
+
+/* GRID */
+.grid { display:flex; flex-direction:column; gap:var(--md); }
+
+/* CARD */
+.card { background:var(--bg); border:1px solid var(--border); border-radius:var(--r-xl); box-shadow:var(--shadow-md); overflow:hidden; opacity:0; transform:translateY(16px); transition:opacity .45s cubic-bezier(.16,1,.3,1), transform .45s cubic-bezier(.16,1,.3,1), box-shadow .2s; }
+.card.in { opacity:1; transform:translateY(0); }
+.card.in:hover { box-shadow:var(--shadow-lg); transform:translateY(-2px); }
+.card-bar { height:3px; }
+.ia    .card-bar { background:linear-gradient(90deg,var(--cyan),var(--blue)); }
+.strat .card-bar { background:linear-gradient(90deg,var(--orange),var(--lime)); }
+.mkt   .card-bar { background:linear-gradient(90deg,var(--pink),var(--magenta)); }
+.veille .card-bar { background:linear-gradient(90deg,var(--purple),var(--cyan)); }
+.card-body { padding:var(--xl); }
+
+.c-chip { display:inline-flex; align-items:center; gap:6px; font-size:.75rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase; border-radius:var(--r-full); padding:4px var(--md); margin-bottom:var(--md); }
+.c-chip::before { content:''; width:5px; height:5px; border-radius:50%; display:inline-block; }
+.ia    .c-chip { background:rgba(82,214,255,.12); color:#0a7fa8; }
+.ia    .c-chip::before { background:var(--cyan); }
+.strat .c-chip { background:rgba(249,115,22,.10); color:#b04a00; }
+.strat .c-chip::before { background:var(--orange); }
+.mkt   .c-chip { background:rgba(239,68,98,.10); color:var(--pink-dark); }
+.mkt   .c-chip::before { background:var(--pink); }
+.veille .c-chip { background:rgba(168,85,247,.10); color:#7a1fa8; }
+.veille .c-chip::before { background:var(--purple); }
+
+.c-title { font-size:1.5rem; font-weight:700; letter-spacing:-.02em; line-height:1.2; color:var(--fg); margin-bottom:var(--lg); }
+.c-rows { display:flex; flex-direction:column; }
+.c-row { padding:var(--md) 0; border-top:1px solid var(--border); }
+.c-row:first-child { border-top:none; padding-top:0; }
+.c-label { font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--muted-fg); margin-bottom:5px; }
+.c-text { font-size:.9375rem; line-height:1.6; color:var(--fg); }
+.c-row.blind { background:rgba(249,115,22,.05); margin:0 calc(-1 * var(--xl)); padding-left:var(--xl); padding-right:var(--xl); border-top:1px solid rgba(249,115,22,.15); border-bottom:1px solid rgba(249,115,22,.15); }
+.c-row.blind .c-label { color:var(--orange); }
+.c-row.blind .c-text { color:#7a4000; font-style:italic; }
+.c-row.action { background:rgba(239,68,98,.04); margin:0 calc(-1 * var(--xl)); padding:var(--md) var(--xl); border-top:1px solid rgba(239,68,98,.12); }
+.c-row.action .c-label { color:var(--pink); }
+.c-row.action .c-text { color:var(--fg); font-weight:600; }
+
+/* VEILLE */
+.v-items { display:flex; flex-direction:column; }
+.v-item { padding:var(--md) 0; border-top:1px solid var(--border); }
+.v-item:first-child { border-top:none; padding-top:0; }
+.v-item:last-child { padding-bottom:0; }
+.v-tag { font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--purple); margin-bottom:5px; }
+.v-headline { font-size:1rem; font-weight:700; color:var(--fg); margin-bottom:5px; line-height:1.3; letter-spacing:-.01em; }
+.v-insight { font-size:.875rem; line-height:1.6; color:var(--muted-fg); }
+
+/* HISTORY PANEL */
+.history-wrap { margin-top:var(--xl); }
+.history-toggle { display:flex; align-items:center; gap:var(--sm); font-size:.75rem; font-weight:600; color:var(--muted-fg); cursor:pointer; background:none; border:none; font-family:inherit; padding:0; letter-spacing:.03em; }
+.history-toggle:hover { color:var(--pink); }
+.history-toggle .arrow { transition:transform .2s; display:inline-block; }
+.history-toggle.open .arrow { transform:rotate(90deg); }
+.history-list { margin-top:var(--md); display:none; flex-direction:column; gap:var(--sm); }
+.history-list.open { display:flex; }
+.history-entry { background:var(--bg); border:1px solid var(--border); border-radius:var(--r-lg); padding:var(--md) var(--lg); display:flex; align-items:center; justify-content:space-between; gap:var(--md); box-shadow:var(--shadow-sm); }
+.history-entry-left { display:flex; flex-direction:column; gap:3px; }
+.history-date { font-size:.75rem; color:var(--muted-fg); font-weight:500; }
+.history-titles { font-size:.875rem; color:var(--fg); font-weight:500; line-height:1.5; }
+.history-clear { font-size:.75rem; font-weight:600; color:var(--muted-fg); cursor:pointer; background:none; border:1px solid var(--border); border-radius:var(--r-sm); padding:3px 8px; font-family:inherit; }
+.history-clear:hover { border-color:var(--pink); color:var(--pink); }
+
+/* FOOTER */
+footer { margin-top:var(--2xl); padding-top:var(--lg); border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.footer-brand { display:flex; align-items:center; gap:var(--sm); font-size:.875rem; font-weight:600; color:var(--fg); }
+.footer-brand .logo-dot { color:var(--pink); }
+.footer-copy { font-size:.75rem; color:var(--muted-fg); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <div class="hl">
+      <div class="eyebrow">AOUI Digital · Intelligence quotidienne</div>
+      <h1>Be the <em>Best</em></h1>
+    </div>
+    <div class="hr">
+      <div id="current-date"></div>
+      <div class="badge"><span class="badge-dot"></span>Thibault Panier</div>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+      <div class="stat-chip pink">🔥 Streak <strong id="streak-n">—</strong> jours</div>
+      <div class="stat-chip green">📚 <strong id="seen-count">0</strong> notions vues</div>
+    </div>
+    <button class="btn-deploy" onclick="toggleDeploy()">🚀 Accès mobile / URL permanente</button>
+  </div>
+
+  <!-- NETLIFY DEPLOY INSTRUCTIONS -->
+  <div class="netlify-banner" id="netlify-banner">
+    <div class="netlify-banner-header" onclick="toggleDeploy()">
+      <div class="netlify-banner-title"><span class="icon">🌐</span> Déployer sur Netlify — accès partout, gratuit, en 3 min</div>
+      <button class="netlify-close">✕ Fermer</button>
+    </div>
+    <div class="netlify-steps">
+      <div class="netlify-step">
+        <div class="step-num">1</div>
+        <div class="step-text">Va sur <a href="https://app.netlify.com/drop" target="_blank">app.netlify.com/drop</a> — pas besoin de compte.</div>
+      </div>
+      <div class="netlify-step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Glisse ce fichier HTML</strong> (<code>be_the_best.html</code>) directement dans la zone de dépôt. Netlify le déploie instantanément.</div>
+      </div>
+      <div class="netlify-step">
+        <div class="step-num">3</div>
+        <div class="step-text">Tu obtiens une <strong>URL permanente</strong> du type <code>https://random-name.netlify.app</code>. Enregistre-la en favori sur ton téléphone → accès en un tap, tous les jours.</div>
+      </div>
+      <div class="netlify-step">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>Optionnel :</strong> crée un compte Netlify gratuit pour personnaliser l'URL (<code>https://betthebest-thibault.netlify.app</code>) et garder le déploiement indéfiniment.</div>
+      </div>
+      <div class="netlify-step">
+        <div class="step-num">⚠</div>
+        <div class="step-text"><strong>Note sur le streak & l'historique :</strong> ils sont stockés dans le navigateur (<code>localStorage</code>). Ils seront indépendants sur chaque appareil. Pour une synchronisation multi-device, il faudrait une base de données — fonctionnalité disponible sur demande.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUGGESTIONS -->
+  <div class="suggestions-wrap">
+    <div class="section-label">Suggestions du jour</div>
+    <div class="suggestions" id="suggestions"></div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="input-wrap">
+    <div class="input-group">
+      <input type="text" id="focus-input" placeholder="Décision, sujet ou contexte du moment à calibrer…" />
+      <button class="btn-gen" id="gen-btn" onclick="generate()">Générer mon brief →</button>
+    </div>
+  </div>
+
+  <div class="progress-bar" id="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="status" id="status"></div>
+  <div id="error" class="error-box" style="display:none;"></div>
+  <div id="output"></div>
+
+  <!-- HISTORY -->
+  <div class="history-wrap" id="history-wrap" style="display:none;">
+    <button class="history-toggle" id="history-toggle" onclick="toggleHistory()">
+      <span class="arrow">▶</span> Historique des notions vues
+    </button>
+    <div class="history-list" id="history-list"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand"><span class="logo-dot">●</span> AOUI Digital</div>
+    <div class="footer-copy">Be the Best · v4</div>
+  </footer>
+
+</div>
+<script>
+// ── CONSTANTS ─────────────────────────────────────────────────────────────────
+const HISTORY_KEY  = 'btb_history';   // stores seen notion titles by date
+const STREAK_KEY   = 'btb_streak';
+const MAX_HISTORY  = 60;              // keep last 60 notions to avoid repeats
+
+// ── DATE ─────────────────────────────────────────────────────────────────────
+const now = new Date();
+const dateStr = now.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+document.getElementById('current-date').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+
+// ── STREAK ───────────────────────────────────────────────────────────────────
+function loadStreak() {
+  try {
+    const today = now.toDateString();
+    const sd = JSON.parse(localStorage.getItem(STREAK_KEY) || '{}');
+    const yest = new Date(now); yest.setDate(yest.getDate()-1);
+    if (sd.last !== today) {
+      sd.n = (sd.last === yest.toDateString()) ? (sd.n||0)+1 : 1;
+      sd.last = today;
+      localStorage.setItem(STREAK_KEY, JSON.stringify(sd));
+    }
+    document.getElementById('streak-n').textContent = sd.n || 1;
+  } catch(e) { document.getElementById('streak-n').textContent = '1'; }
+}
+loadStreak();
+
+// ── HISTORY MANAGEMENT ────────────────────────────────────────────────────────
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+
+function saveHistory(history) {
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+}
+
+function getSeenTitles() {
+  return loadHistory().map(e => e.titres).flat();
+}
+
+function addToHistory(notionTitles) {
+  const history = loadHistory();
+  const today = now.toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
+  // Replace today's entry if it exists
+  const idx = history.findIndex(e => e.date === today);
+  if (idx >= 0) history.splice(idx, 1);
+  history.unshift({ date: today, titres: notionTitles });
+  // Keep only last MAX_HISTORY unique entries
+  saveHistory(history.slice(0, 30));
+  refreshSeenCount();
+  refreshHistoryPanel();
+}
+
+function refreshSeenCount() {
+  document.getElementById('seen-count').textContent = getSeenTitles().length;
+}
+
+function refreshHistoryPanel() {
+  const history = loadHistory();
+  const wrap = document.getElementById('history-wrap');
+  const list  = document.getElementById('history-list');
+  if (!history.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  list.innerHTML = '';
+  history.forEach(entry => {
+    const el = document.createElement('div');
+    el.className = 'history-entry';
+    el.innerHTML = `
+      <div class="history-entry-left">
+        <div class="history-date">${entry.date}</div>
+        <div class="history-titles">${entry.titres.join(' · ')}</div>
+      </div>`;
+    list.appendChild(el);
+  });
+  // Add clear button at end
+  const clearWrap = document.createElement('div');
+  clearWrap.style.cssText = 'display:flex;justify-content:flex-end;padding-top:.25rem;';
+  clearWrap.innerHTML = `<button class="history-clear" onclick="clearHistory()">🗑 Effacer l'historique</button>`;
+  list.appendChild(clearWrap);
+}
+
+function clearHistory() {
+  if (!confirm('Effacer tout l\'historique des notions vues ?')) return;
+  localStorage.removeItem(HISTORY_KEY);
+  refreshSeenCount();
+  refreshHistoryPanel();
+}
+
+function toggleHistory() {
+  const toggle = document.getElementById('history-toggle');
+  const list   = document.getElementById('history-list');
+  toggle.classList.toggle('open');
+  list.classList.toggle('open');
+}
+
+// Init
+refreshSeenCount();
+refreshHistoryPanel();
+
+// ── NETLIFY BANNER ────────────────────────────────────────────────────────────
+function toggleDeploy() {
+  document.getElementById('netlify-banner').classList.toggle('open');
+}
+
+// ── TOPIC SUGGESTIONS ─────────────────────────────────────────────────────────
+const ALL_TOPICS = [
+  { label:'Agents IA autonomes', tag:'ia' },
+  { label:'RAG & mémoire IA', tag:'ia' },
+  { label:'Prompt engineering avancé', tag:'ia' },
+  { label:'IA & automatisation commerciale', tag:'ia' },
+  { label:'Fine-tuning vs prompting', tag:'ia' },
+  { label:'IA générative B2B', tag:'ia' },
+  { label:'ROI IA réel', tag:'ia' },
+  { label:'IA & prise de décision', tag:'ia' },
+  { label:'Multimodal en entreprise', tag:'ia' },
+  { label:'Voice AI & nouveaux usages', tag:'ia' },
+  { label:'Pricing par la valeur', tag:'strat' },
+  { label:"Architecture d'offre", tag:'strat' },
+  { label:'Exit & transmission', tag:'strat' },
+  { label:'Bootstrapping vs levée', tag:'strat' },
+  { label:'Modèle plateforme vs service', tag:'strat' },
+  { label:'Concentration vs diversification', tag:'strat' },
+  { label:"Moats & barrières à l'entrée", tag:'strat' },
+  { label:'Scalabilité sans se diluer', tag:'strat' },
+  { label:'Pivot stratégique', tag:'strat' },
+  { label:'Focalisation terrain', tag:'strat' },
+  { label:'Personal branding B2B', tag:'mkt' },
+  { label:'Content-led acquisition', tag:'mkt' },
+  { label:'Séquences email outbound', tag:'mkt' },
+  { label:'Conversion page de vente', tag:'mkt' },
+  { label:'Positioning & messaging', tag:'mkt' },
+  { label:'SEO & autorité sémantique', tag:'mkt' },
+  { label:'Réseaux sociaux experts', tag:'mkt' },
+  { label:'Preuve sociale & autorité', tag:'mkt' },
+  { label:'Funnel B2B court cycle', tag:'mkt' },
+  { label:'Distribution avant produit', tag:'mkt' },
+];
+
+function getDailySuggestions() {
+  const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+  const result = [], used = new Set();
+  ['ia','strat','mkt'].forEach((t, ti) => {
+    const pool = ALL_TOPICS.filter(x => x.tag === t);
+    const pick = pool[(dayOfYear * [3,7,11][ti]) % pool.length];
+    result.push(pick); used.add(pick.label);
+  });
+  let i = dayOfYear;
+  while (result.length < 6) {
+    const c = ALL_TOPICS[i % ALL_TOPICS.length];
+    if (!used.has(c.label)) { result.push(c); used.add(c.label); }
+    i++;
+  }
+  return result;
+}
+
+getDailySuggestions().forEach(s => {
+  const pill = document.createElement('button');
+  pill.className = `sug-pill ${s.tag}`;
+  pill.textContent = s.label;
+  pill.onclick = () => {
+    const inp = document.getElementById('focus-input');
+    if (pill.classList.contains('active')) {
+      pill.classList.remove('active');
+      if (inp.value === s.label) inp.value = '';
+    } else {
+      document.querySelectorAll('.sug-pill.active').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      inp.value = s.label;
+    }
+  };
+  document.getElementById('suggestions').appendChild(pill);
+});
+
+// ── UI HELPERS ────────────────────────────────────────────────────────────────
+function setStatus(txt, loading=false) {
+  const el = document.getElementById('status');
+  el.innerHTML = loading ? `<span class="spinner"></span><span>${txt}</span>` : txt ? `<span>${txt}</span>` : '';
+}
+function setProgress(pct) {
+  document.getElementById('progress-bar').style.display = pct > 0 ? 'block' : 'none';
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+function showError(msg) {
+  const el = document.getElementById('error');
+  el.innerHTML = msg.replace(/\n/g,'<br>');
+  el.style.display = 'block';
+}
+function hideError() { document.getElementById('error').style.display = 'none'; }
+
+// ── API ───────────────────────────────────────────────────────────────────────
+async function callClaude({ system, user, tools, maxTokens=2000 }) {
+  const body = { model:'claude-sonnet-4-20250514', max_tokens:maxTokens, system, messages:[{ role:'user', content:user }] };
+  if (tools) body.tools = tools;
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)
+  });
+  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e?.error?.message || `HTTP ${res.status}`); }
+  const data = await res.json();
+  return (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+}
+
+function extractJSON(raw) {
+  let s = raw.replace(/```json\s*/gi,'').replace(/```\s*/gi,'').trim();
+  const start = s.indexOf('{');
+  if (start===-1) throw new Error('Aucun JSON dans la réponse');
+  let depth=0, end=-1;
+  for (let i=start; i<s.length; i++) {
+    if (s[i]==='{') depth++;
+    else if (s[i]==='}') { depth--; if (depth===0){ end=i; break; } }
+  }
+  if (end===-1) throw new Error('JSON incomplet');
+  return JSON.parse(s.slice(start,end+1));
+}
+
+// ── GENERATE ─────────────────────────────────────────────────────────────────
+async function generate() {
+  const btn    = document.getElementById('gen-btn');
+  const focus  = document.getElementById('focus-input').value.trim();
+  const output = document.getElementById('output');
+
+  btn.disabled = true;
+  output.innerHTML = '';
+  hideError();
+  setProgress(10);
+
+  const ctx = focus ? `\n\nCONTEXTE DU JOUR : "${focus}". Calibre en priorité sur ce sujet.` : '';
+
+  // Build anti-repetition block from history
+  const seenTitles = getSeenTitles();
+  const antiRepeat = seenTitles.length > 0
+    ? `\n\nNOTIONS DÉJÀ VUES (à NE PAS répéter, propose des sujets différents) :\n- ${seenTitles.slice(0, MAX_HISTORY).join('\n- ')}`
+    : '';
+
+  // ── STEP 1 : NOTIONS ────────────────────────────────────────────────────────
+  const sysNotions = `Tu es un coach d'élite pour Thibault Panier, entrepreneur, directeur d'AOUI Groupe.
+Profil : intersection IA / stratégie / marketing. Exit réalisé, enseignant école de commerce, multi-projets.
+Angle mort principal : dispersion intelligente, lisibilité externe faible, offre pas assez compressée.
+
+RÈGLE ABSOLUE : réponds UNIQUEMENT avec un objet JSON valide. Zéro texte avant ou après. Zéro backtick.
+
+Format strict :
+{"notions":[
+  {"domaine":"IA appliquée au business","classe":"ia","titre":"...","definition":"...","insight":"...","angle_mort":"...","action":"..."},
+  {"domaine":"Stratégie & modèles économiques","classe":"strat","titre":"...","definition":"...","insight":"...","angle_mort":"...","action":"..."},
+  {"domaine":"Marketing & acquisition","classe":"mkt","titre":"...","definition":"...","insight":"...","angle_mort":"...","action":"..."}
+]}
+
+Règles :
+- titre : concept sous-estimé ou contre-intuitif, jamais banal
+- definition : 2 phrases max, ultra-précis
+- insight : ce que la majorité rate ou inverse
+- angle_mort : challenge direct sur SA réalité (dispersion, lisibilité, scalabilité, focalisation)
+- action : instruction concrète, testable cette semaine
+- Phrases courtes. Zéro jargon.${antiRepeat}`;
+
+  setStatus('Génération des notions…', true);
+  let notions = [];
+  try {
+    const r1 = await callClaude({ system:sysNotions, user:`Brief du ${dateStr}.${ctx}`, maxTokens:2000 });
+    const p1 = extractJSON(r1);
+    if (!p1.notions || !Array.isArray(p1.notions)) throw new Error('Structure invalide');
+    notions = p1.notions;
+
+    // Save to history immediately
+    const titles = notions.map(n => n.titre).filter(Boolean);
+    addToHistory(titles);
+
+    setProgress(55);
+    renderNotions(notions, output);
+  } catch(err) {
+    setStatus(''); setProgress(0);
+    showError(`Erreur : ${err.message}`);
+    btn.disabled = false;
+    return;
+  }
+
+  // ── STEP 2 : VEILLE ─────────────────────────────────────────────────────────
+  const sysVeille = `Tu es un veilleur stratégique pour un entrepreneur expert en IA, stratégie et marketing.
+RÈGLE ABSOLUE : réponds UNIQUEMENT avec un objet JSON valide. Zéro texte avant ou après. Zéro backtick.
+Format : {"veille":[
+  {"tag":"IA","headline":"...","insight_business":"..."},
+  {"tag":"Stratégie","headline":"...","insight_business":"..."},
+  {"tag":"Marketing","headline":"...","insight_business":"..."}
+]}
+headline = fait réel des 7 derniers jours. insight_business = implication concrète pour un entrepreneur (2-3 phrases courtes).`;
+
+  setStatus('Veille — recherche des actualités…', true);
+  try {
+    const r2 = await callClaude({
+      system: sysVeille,
+      user: `Veille du ${dateStr} — actualités réelles des 7 derniers jours sur IA business, stratégie, marketing & acquisition.${ctx}`,
+      tools: [{ type:'web_search_20250305', name:'web_search' }],
+      maxTokens: 1500
+    });
+    const p2 = extractJSON(r2);
+    if (p2.veille && Array.isArray(p2.veille)) renderVeille(p2.veille, output, notions.length);
+  } catch(err) { console.warn('Veille (non-bloquant):', err.message); }
+
+  setProgress(100);
+  setTimeout(() => setProgress(0), 800);
+  setStatus('');
+  btn.disabled = false;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function getGrid(output) {
+  let g = output.querySelector('.grid');
+  if (!g) { g = document.createElement('div'); g.className = 'grid'; output.appendChild(g); }
+  return g;
+}
+
+function renderNotions(notions, output) {
+  const grid = getGrid(output);
+  notions.forEach((n, i) => {
+    const card = document.createElement('div');
+    card.className = `card ${n.classe||''}`;
+    card.innerHTML = `
+      <div class="card-bar"></div>
+      <div class="card-body">
+        <div class="c-chip">${n.domaine}</div>
+        <div class="c-title">${n.titre}</div>
+        <div class="c-rows">
+          <div class="c-row"><div class="c-label">Ce que c'est</div><div class="c-text">${n.definition}</div></div>
+          <div class="c-row"><div class="c-label">Pourquoi ça compte</div><div class="c-text">${n.insight}</div></div>
+          <div class="c-row blind"><div class="c-label">Ton angle mort</div><div class="c-text">${n.angle_mort}</div></div>
+          <div class="c-row action"><div class="c-label">Action cette semaine</div><div class="c-text">${n.action}</div></div>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+    setTimeout(() => card.classList.add('in'), 80 + i * 120);
+  });
+}
+
+function renderVeille(items, output, notionCount) {
+  const grid = getGrid(output);
+  const card = document.createElement('div');
+  card.className = 'card veille';
+  const shortDate = now.toLocaleDateString('fr-FR', { day:'numeric', month:'long' });
+  const itemsHTML = items.map(v => `
+    <div class="v-item">
+      <div class="v-tag">${v.tag}</div>
+      <div class="v-headline">${v.headline}</div>
+      <div class="v-insight">${v.insight_business}</div>
+    </div>`).join('');
+  card.innerHTML = `
+    <div class="card-bar"></div>
+    <div class="card-body">
+      <div class="c-chip">Veille · ${shortDate}</div>
+      <div class="v-items">${itemsHTML}</div>
+    </div>`;
+  grid.appendChild(card);
+  setTimeout(() => card.classList.add('in'), 80 + notionCount * 120 + 150);
+}
+</script>
+</body>
+</html>
